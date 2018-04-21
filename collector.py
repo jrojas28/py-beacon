@@ -9,10 +9,10 @@ from proximity import *
 DEBUG = True
 
 def sendData(socket, target, data):
-    socket.sendTo(data, (target))
+    socket.sendto(data, (target))
 
 def receiveData(socket):
-    data, addr = socket.recvFrom(1024)
+    data, addr = socket.recvfrom(1024)
     return (data, addr)
 
 def initSocket(receiveAddress = ('', 9876)):
