@@ -1,6 +1,8 @@
-[MQTT]
-url       = localhost
-port      = 1883
+[SOCKET]
+send_url       = 127.0.0.1
+send_port      = 9870
+receive_url    = ""
+receive_port   = 9876
 keepalive = 60
 
 [Calculator]
