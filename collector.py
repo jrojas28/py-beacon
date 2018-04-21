@@ -29,6 +29,8 @@ def startScan(socket, sendAddress = ('127.0.0.1', 9870), filter="", topic="/ble/
     """Scan BLE beacon and publish to Socket Server"""
     if socket:
         scanner = Scanner()
+        if DEBUG:
+        print "Started Scanning, reporting to " + str(sendAddress[0]) + ":" + str(sendAddress[1])
         while True:
             for beacon in scanner.scan():
                 fields = beacon.split(",")
@@ -61,5 +63,3 @@ if __name__ == '__main__':
         print "Socket initialized."
     sendAddress = (conf["send_url"], conf["send_port"])
     startScan(socket, sendAddress, conf["filter"], conf["topic_id"])
-    if DEBUG:
-        print "Started Scanning, reporting to " + str(conf["send_url"]) + ":" + str(conf["send_port"])
