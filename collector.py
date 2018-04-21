@@ -54,6 +54,6 @@ def init():
 
 if __name__ == '__main__':
     conf = init()
-    socket = initSocket((conf["receive_url"], conf["receive_url"]))
+    socket = initSocket((conf["receive_url"], conf["receive_port"]))
     sendAddress = (conf["send_url"], conf["send_port"])
     startScan(socket, sendAddress, conf["filter"], conf["topic_id"])
