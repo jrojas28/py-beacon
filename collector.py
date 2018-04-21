@@ -30,7 +30,7 @@ def startScan(socket, sendAddress = ('127.0.0.1', 9870), filter="", topic="/ble/
     if socket:
         scanner = Scanner()
         if DEBUG:
-        print "Started Scanning, reporting to " + str(sendAddress[0]) + ":" + str(sendAddress[1])
+            print "Started Scanning, reporting to " + str(sendAddress[0]) + ":" + str(sendAddress[1])
         while True:
             for beacon in scanner.scan():
                 fields = beacon.split(",")
