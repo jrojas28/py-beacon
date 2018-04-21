@@ -33,9 +33,9 @@ def startScan(socket, sendAddress = ('127.0.0.1', 9870), filter="", topic="/ble/
             for beacon in scanner.scan():
                 fields = beacon.split(",")
                 if fields[1].startswith(filter):
-                    sendData(socket, sendAddress, '{"id":"%s","val":"%s"}' % (fields[0], fields[5]))
+                    sendData(socket, sendAddress, '{"id":"%s","rssi":"%s"}' % (fields[0], fields[5]))
                     if DEBUG: 
-                        print('{"id":"%s","val":"%s"}' % (fields[0], fields[5]))
+                        print('{"id":"%s","rssi":"%s"}' % (fields[0], fields[5]))
 
 def init():
     """Read config file"""
@@ -54,6 +54,12 @@ def init():
 
 if __name__ == '__main__':
     conf = init()
+    if DEBUG:
+        print "Config Initialized."
     socket = initSocket((conf["receive_url"], conf["receive_port"]))
+    if DEBUG:
+        print "Socket initialized."
     sendAddress = (conf["send_url"], conf["send_port"])
     startScan(socket, sendAddress, conf["filter"], conf["topic_id"])
+    if DEBUG:
+        print "Started Scanning, reporting to " + str(conf["send_url"]) + ":" + str(conf["send_port"])
