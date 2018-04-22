@@ -74,6 +74,7 @@ if __name__ == '__main__':
                         print "Data received: " + str(data)
                     calculationThread.add(obj["id"], int(obj["rssi"]))   
     except (KeyboardInterrupt, SystemExit):
+        print "Stopping threads to finish process.."
         calculationThread.stop()
         calculationThread.join()
         

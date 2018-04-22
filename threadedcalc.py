@@ -42,7 +42,7 @@ class ThreadedCalculator(threading.Thread):
     def nearest(self):
         self.lock.acquire()
         try:
-            bid, rssi = calc.nearest()
+            bid, rssi = self.calculator.nearest()
         finally:
             self.lock.release()
         if bid:
