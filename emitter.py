@@ -91,7 +91,7 @@ if __name__ == '__main__':
                 if DEBUG:
                     print "Received data from " + str(addr)
                     print "Data received: " + str(data)
-                lock.aquire()
+                lock.acquire()
                 try:
                     obj = json.loads(data)
                     calculator.add(obj["id"], int(obj["rssi"]))    
