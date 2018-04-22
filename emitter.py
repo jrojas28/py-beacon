@@ -77,9 +77,10 @@ if __name__ == '__main__':
         time.sleep(conf["sleepInterval"])
         if DEBUG:
             print "Calculating for nearest..."
-        ret, val = calculator.nearest()
-        if ret:
-            sendData(socket, sendAddress, str('{"id":"%s","rssi":"%s"}' % (ret, val)))
+        bid, rssi = calculator.nearest()
+        if bid:
+            sendData(socket, sendAddress, str('{"id":"%s","rssi":"%s"}' % (bid, rssi)))
             if DEBUG: 
-                print "Nearest: " + str(ret, val)
+                print "Nearest: " + str(bid)
+                print "Average RSSI For Nearest: " + str(rssi) 
         
