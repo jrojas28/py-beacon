@@ -20,6 +20,7 @@ class ThreadedCalculator(threading.Thread):
             if self.sleepInterval != 0:
                 print "Sleeping for " + str(self.sleepInterval) + " seconds."
                 time.sleep(sleepInterval)
+        print "Finishing Threaded Calculator..."
         return
                 
     def stop(self):
@@ -43,7 +44,7 @@ class ThreadedCalculator(threading.Thread):
         try:
             bid, rssi = calc.nearest()
         finally:
-            lock.release()
+            self.lock.release()
         if bid:
             return (bid, rssi)
         return None, None
