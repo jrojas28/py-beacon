@@ -3,6 +3,7 @@
 #
 import threading, socket, select, time, ConfigParser, json
 from proximity import *
+from threadedcalc import ThreadedCalculator
 
 DEBUG = True
 calculator = 0
@@ -24,23 +25,6 @@ def initSocket(receiveAddress = ('', 9870)):
     except Exception, e:
         print(e)
         return None
-
-def calculateNearest(calc, lock, sleepInterval = 0):
-    while True:
-        lock.acquire()
-        try:
-            bid, rssi = calc.nearest()
-            if bid:
-                sendData(socket, sendAddress, str('{"id":"%s","rssi":"%s"}' % (bid, rssi)))
-                if DEBUG: 
-                    print "Nearest: " + str(bid)
-                    print "Average RSSI For Nearest: " + str(rssi)
-        finally:
-            if DEBUG:
-                print "Sleeping..."
-            lock.release()
-        if sleepInterval != 0:
-            time.sleep(sleepInterval)
 
 def init():
     """Read config file"""
@@ -76,23 +60,20 @@ if __name__ == '__main__':
     writableSockets = []
 
     lock = threading.Lock()
-    calculationThread = threading.Thread(target = calculateNearest, args = (calculator, lock, conf["sleepInterval"]))
+    calculationThread = ThreadedCalculator(calculator, lock, conf["sleepInterval"])
     calculationThread.start()
 
-    while True:
-        readable, writable, exceptional = select.select(inputSockets, writableSockets, inputSockets, 0)
-        for socket in readable:
-            if socket is udpSocket:
-                data, addr = receiveData(udpSocket)
-                if DEBUG:
-                    print "Received data from " + str(addr)
-                    print "Data received: " + str(data)
-                lock.acquire()
-                try:
-                    obj = json.loads(data)
-                    calculator.add(obj["id"], int(obj["rssi"]))    
-                finally:
-                    if DEBUG: 
-                          print "Added new object to Calculator"
-                    lock.release()
+    try:
+        while True:
+            readable, writable, exceptional = select.select(inputSockets, writableSockets, inputSockets, 0)
+            for socket in readable:
+                if socket is udpSocket:
+                    data, addr = receiveData(udpSocket)
+                    if DEBUG:
+                        print "Received data from " + str(addr)
+                        print "Data received: " + str(data)
+                    calculationThread.add(obj["id"], int(obj["rssi"]))   
+    except (KeyboardInterrupt, SystemExit):
+        calculationThread.stop()
+        calculationThread.join()
         
