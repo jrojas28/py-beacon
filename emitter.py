@@ -1,7 +1,7 @@
 #
 # by Taka Wang
 #
-import socket, select, time, ConfigParser, json
+import threading, socket, select, time, ConfigParser, json
 from proximity import *
 
 DEBUG = True
@@ -24,6 +24,23 @@ def initSocket(receiveAddress = ('', 9870)):
     except Exception, e:
         print(e)
         return None
+
+def calculateNearest(calc, lock, sleepInterval = 0)
+    while True:
+        lock.acquire()
+        try:
+            bid, rssi = calc.nearest()
+            if bid:
+                sendData(socket, sendAddress, str('{"id":"%s","rssi":"%s"}' % (bid, rssi)))
+                if DEBUG: 
+                    print "Nearest: " + str(bid)
+                    print "Average RSSI For Nearest: " + str(rssi)
+        finally:
+            if DEBUG:
+                print "Sleeping..."
+            lock.release()
+        if sleepInterval != 0:
+            time.sleep(sleepInterval)
 
 def init():
     """Read config file"""
@@ -53,16 +70,20 @@ if __name__ == '__main__':
     udpSocket = initSocket((conf["receive_url"], conf["receive_port"]))
     if DEBUG:
         print "Socket initialized."
-    sendAddress = (conf["send_url"], conf["send_port"])
 
+    sendAddress = (conf["send_url"], conf["send_port"])
     inputSockets = [udpSocket]
     writableSockets = []
-    
+
+    lock = threading.Lock()
+    calculationThread = threading.Thread(target = calculateNearest, args = (calculator, lock, conf["sleepInterval"]))
+    calculationThread.start()
+
     while True:
         readable, writable, exceptional = select.select(inputSockets, writableSockets, inputSockets, 0)
-        if len(readable) > 0:
+        if len(readable) > 0 and DEBUG:
             print "Found data on UDP Socket."
-        else:
+        else if DEBUG:
             print "No data received."
         for socket in readable:
             if socket is udpSocket:
@@ -70,17 +91,12 @@ if __name__ == '__main__':
                 if DEBUG:
                     print "Received data from " + str(addr)
                     print "Data received: " + str(data)
-                obj = json.loads(data)
-                calculator.add(obj["id"], int(obj["rssi"]))                
-        if DEBUG:
-            print "Sleeping for " + str(conf["sleepInterval"])
-        time.sleep(conf["sleepInterval"])
-        if DEBUG:
-            print "Calculating for nearest..."
-        bid, rssi = calculator.nearest()
-        if bid:
-            sendData(socket, sendAddress, str('{"id":"%s","rssi":"%s"}' % (bid, rssi)))
-            if DEBUG: 
-                print "Nearest: " + str(bid)
-                print "Average RSSI For Nearest: " + str(rssi) 
+                lock.aquire()
+                try:
+                    obj = json.loads(data)
+                    calculator.add(obj["id"], int(obj["rssi"]))    
+                finally:
+                    if DEBUG: 
+                          print "Added new object to Calculator"
+                    lock.release()
         
