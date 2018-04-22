@@ -46,10 +46,10 @@ def init():
     config.read("config")
     global DEBUG
     DEBUG = True if int(config.get('Collector', 'debug')) == 1 else False
-    ret["send_url"]         = config.get('SOCKET', 'send_url')
-    ret["send_port"]        = int(config.get('SOCKET', 'send_port'))
-    ret["receive_url"]      = config.get('SOCKET', 'receive_url')
-    ret["receive_port"]     = int(config.get('SOCKET', 'receive_port'))
+    ret["send_url"]         = config.get('Collector', 'send_url')
+    ret["send_port"]        = int(config.get('Collector', 'send_port'))
+    ret["receive_url"]      = config.get('Collector', 'receive_url')
+    ret["receive_port"]     = int(config.get('Collector', 'receive_port'))
     ret["filter"]           = config.get('Scanner', 'filter')
     ret["topic_id"]         = config.get('Scanner', 'topic_id')
     return ret
