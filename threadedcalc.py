@@ -1,4 +1,4 @@
-import time, threading, json
+import sys, time, threading, json
 from proximity import Calculator
 
 class ThreadedCalculator(threading.Thread):
@@ -21,7 +21,7 @@ class ThreadedCalculator(threading.Thread):
                 print "Sleeping for " + str(self.sleepInterval) + " seconds."
                 time.sleep(self.sleepInterval)
         print "Finishing Threaded Calculator..."
-        return
+        sys.exit()
                 
     def stop(self):
         print "Stopping Thread..."
