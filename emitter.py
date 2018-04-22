@@ -1,7 +1,7 @@
 #
 # by Taka Wang
 #
-import select, time, ConfigParser, json
+import socket, select, time, ConfigParser, json
 from proximity import *
 
 DEBUG = True
