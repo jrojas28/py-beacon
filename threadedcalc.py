@@ -19,7 +19,7 @@ class ThreadedCalculator(threading.Thread):
                 print "Average RSSI For Nearest: " + str(rssi)
             if self.sleepInterval != 0:
                 print "Sleeping for " + str(self.sleepInterval) + " seconds."
-                time.sleep(sleepInterval)
+                time.sleep(self.sleepInterval)
         print "Finishing Threaded Calculator..."
         return
                 
