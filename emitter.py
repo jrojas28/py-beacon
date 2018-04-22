@@ -25,7 +25,7 @@ def initSocket(receiveAddress = ('', 9870)):
         print(e)
         return None
 
-def calculateNearest(calc, lock, sleepInterval = 0)
+def calculateNearest(calc, lock, sleepInterval = 0):
     while True:
         lock.acquire()
         try:
