@@ -62,7 +62,7 @@ if __name__ == '__main__':
         readable, writable, exceptional = select.select(inputSockets, writableSockets, inputSockets, 0)
         if len(readable) > 0:
             print "Found data on UDP Socket."
-        else 
+        else:
             print "No data received."
         for socket in readable
             if socket is udpSocket
