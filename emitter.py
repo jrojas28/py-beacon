@@ -64,8 +64,8 @@ if __name__ == '__main__':
             print "Found data on UDP Socket."
         else:
             print "No data received."
-        for socket in readable
-            if socket is udpSocket
+        for socket in readable:
+            if socket is udpSocket:
                 data, addr = receiveData(udpSocket)
                 if DEBUG:
                     print "Received data from " + str(addr)
