@@ -50,8 +50,8 @@ class Calculator():
             self.ts[id]     = int(time.time() + self.threshold) # init with current timestamp
 
         self.qRssi[id].append(rssi)
-        self.majors[id].append(major)
-        self.minors[id].append(minor)
+        self.majors[id] = major
+        self.minors[id] = minor
         self.ts[id] = int(time.time() + self.threshold)       # update expire timestamp
         if (len(self.qRssi[id]) == self.capacity):
             # weighted moving average calculation via numpy's average function
