@@ -65,7 +65,7 @@ class Calculator():
                 nearest_uid = max(self.qRssi.iteritems(), key = operator.itemgetter(1))[0]
                 if (self.aRssi[nearest_uid] > -200):
                     #Returns id, rssi, major, minor
-                    return str(nearest_uid), round(self.aRssi[nearest_uid],1), int(self.major[nearest_uid]), int(self.minor[nearest_uid])
+                    return str(nearest_uid), round(self.aRssi[nearest_uid],1), int(self.majors[nearest_uid]), int(self.minors[nearest_uid])
         return None, None, None, None
 
     def beacons(self):
