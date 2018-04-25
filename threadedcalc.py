@@ -49,3 +49,32 @@ class ThreadedCalculator(threading.Thread):
             return (bid, rssi)
         return None, None
 
+class ThreadedScanner(threading.Thread):
+    def __init__(self, scanner = Scanner(), lock = threading.Lock(), sleepInterval = 0):
+        super(ThreadedScanner, self).__init__()
+        self.scanner = scanner
+        self.lock = lock 
+        self.sleepInterval = sleepInterval
+        self._stopEvent  = threading.Event()
+
+    # ------------------- Threading Related Functions -----------------------
+    def run(self):
+        while not self.isStopped():
+            bid, rssi = self.nearest()
+            if bid:
+                #Something must happen with the bid, for instance, sending it to someone.
+                print "Nearest: " + str(bid)
+                print "Average RSSI For Nearest: " + str(rssi)
+            if self.sleepInterval != 0:
+                print "Sleeping for " + str(self.sleepInterval) + " seconds."
+                time.sleep(self.sleepInterval)
+        print "Finishing Threaded Calculator..."
+        sys.exit()
+                
+    def stop(self):
+        print "Stopping Thread..."
+        self._stopEvent.set()
+
+    def isStopped(self):
+        return self._stopEvent.is_set()
+    # -----------------------------------------------------------------------

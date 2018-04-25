@@ -34,10 +34,18 @@ def startScan(socket, sendAddress = ('127.0.0.1', 9870), filter="", topic="/ble/
         while True:
             for beacon in scanner.scan():
                 fields = beacon.split(",")
+                #Reference:
+                # fields[0] = MAC Address 
+                # fields[1] = UDID
+                # fields[2] = Major
+                # fields[3] = Minor
+                # fields[4] = Unknown (DONT USE)
+                # fields[5] = RSSI
                 if fields[1].startswith(filter):
                     sendData(socket, sendAddress, '{"id":"%s","rssi":"%s"}' % (fields[0], fields[5]))
                     if DEBUG: 
                         print('{"id":"%s","rssi":"%s"}' % (fields[0], fields[5]))
+                        print('{"major":"%s","minor":"%s"' % (fields[2], fields[3]))
 
 def init():
     """Read config file"""
