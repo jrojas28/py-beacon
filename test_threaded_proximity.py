@@ -3,6 +3,7 @@ import threaded_proximity
 
 if __name__ == "__main__":
     proxThread = threaded_proximity.ThreadedProximity()
+    proxThread.start()
     print "Initialized Thread."
     try:
         while True:

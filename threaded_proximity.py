@@ -108,7 +108,7 @@ class ThreadedProximity(threading.Thread):
                 # fields[3] = Minor
                 # fields[4] = Unknown (DONT USE)
                 # fields[5] = RSSI
-                values = {'mac': fields[0], 'bid': fields[1], 'major': fields[2], 'minor': fields[3], 'rrsi': fields[5] }
+                values = {'mac': fields[0], 'bid': fields[1], 'major': fields[2], 'minor': fields[3], 'rssi': fields[5] }
                 self.__calculator.add(values['mac'], values['rssi'], values['major'], values['minor'])
             if self.sleepInterval != 0:
                 time.sleep(self.sleepInterval)
