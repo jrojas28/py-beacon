@@ -13,6 +13,8 @@ class Calculator():
     def __init__(self, queueCapacity = 5, chkTimer = 3, threshold = 10):
         self.qRssi     = {}             # key:id, value:rssi queue
         self.aRssi     = {}             # key:id, value:average rssi
+        self.majors    = {}             # key:id, value:major
+        self.minors    = {}             # key:id, value:minor
         self.ts        = {}             # key:id, value:expire timestamp
         self.capacity  = queueCapacity  # queue capacity for moving average
         self.threshold = threshold      # missing beacon threshold in seconds
@@ -38,14 +40,18 @@ class Calculator():
                 del self.ts[id]
                 print("clean uid: ", str(id))
 
-    def add(self, id, value):
+    def add(self, id, rssi, major = 0, minor = 0):
         """Add new rssi for calculation."""
         if (id not in self.qRssi):
-            self.qRssi[id] = deque(maxlen = self.capacity)     # size limited queue
-            self.aRssi[id] = -sys.maxint - 1                   # init with -inf
-            self.ts[id]    = int(time.time() + self.threshold) # init with current timestamp
+            self.qRssi[id]  = deque(maxlen = self.capacity)     # size limited queue
+            self.aRssi[id]  = -sys.maxint - 1                   # init with -inf
+            self.majors[id] = -sys.maxint - 1                   # init with -inf
+            self.minors[id] = -sys.maxint - 1                   # init with -inf
+            self.ts[id]     = int(time.time() + self.threshold) # init with current timestamp
 
-        self.qRssi[id].append(value)
+        self.qRssi[id].append(rssi)
+        self.majors[id].append(major)
+        self.minors[id].append(minor)
         self.ts[id] = int(time.time() + self.threshold)       # update expire timestamp
         if (len(self.qRssi[id]) == self.capacity):
             # weighted moving average calculation via numpy's average function
@@ -58,8 +64,9 @@ class Calculator():
             if (len(container) == self.capacity):
                 nearest_uid = max(self.qRssi.iteritems(), key = operator.itemgetter(1))[0]
                 if (self.aRssi[nearest_uid] > -200):
-                    return str(nearest_uid), round(self.aRssi[nearest_uid],1)
-        return None, None
+                    #Returns id, rssi, major, minor
+                    return str(nearest_uid), round(self.aRssi[nearest_uid],1), int(self.major[nearest_uid]), int(self.minor[nearest_uid])
+        return None, None, None, None
 
     def beacons(self):
         """List visible beacons"""
