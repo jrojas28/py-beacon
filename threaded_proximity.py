@@ -7,7 +7,7 @@ class ThreadedCalculator(threading.Thread):
         self.calculator = calculator
         self.lock = lock 
         self.sleepInterval = sleepInterval
-        self._stopEvent  = threading.Event()
+        self.__stopEvent  = threading.Event()
 
     # ------------------- Threading Related Functions -----------------------
     def run(self):
@@ -25,10 +25,10 @@ class ThreadedCalculator(threading.Thread):
                 
     def stop(self):
         print "Stopping Thread..."
-        self._stopEvent.set()
+        self.__stopEvent.set()
 
     def isStopped(self):
-        return self._stopEvent.is_set()
+        return self.__stopEvent.is_set()
     # -----------------------------------------------------------------------
 
     def add(self, json):
@@ -55,7 +55,7 @@ class ThreadedScanner(threading.Thread):
         self.scanner = scanner
         self.lock = lock 
         self.sleepInterval = sleepInterval
-        self._stopEvent  = threading.Event()
+        self.__stopEvent  = threading.Event()
 
     # ------------------- Threading Related Functions -----------------------
     def run(self):
@@ -73,10 +73,10 @@ class ThreadedScanner(threading.Thread):
                 
     def stop(self):
         print "Stopping Thread..."
-        self._stopEvent.set()
+        self.__stopEvent.set()
 
     def isStopped(self):
-        return self._stopEvent.is_set()
+        return self.__stopEvent.is_set()
     # -----------------------------------------------------------------------
     def scan(self):
         self.lock.acquire()
@@ -90,6 +90,8 @@ class ThreadedScanner(threading.Thread):
 
 class ThreadedProximity(threading.Thread):
     def __init__(self, scanner = proximity.Scanner(), calculator = proximity.Calculator(), sleepInterval = 0):
+        super(ThreadedProximity, self).__init__()
+        self.__stopEvent  = threading.Event()
         self.__scanner = scanner
         self.__calculator = calculator
         self.__sleepInterval = sleepInterval
@@ -118,8 +120,8 @@ class ThreadedProximity(threading.Thread):
                 
     def stop(self):
         print "Stopping Thread..."
-        self._stopEvent.set()
+        self.__stopEvent.set()
 
     def isStopped(self):
-        return self._stopEvent.is_set()
+        return self.__stopEvent.is_set()
     # -----------------------------------------------------------------------
